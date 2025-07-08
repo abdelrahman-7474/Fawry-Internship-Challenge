@@ -31,8 +31,16 @@ public class Checkout {
         }
 
         double total = subtotal + shipping_fees;
-        customer.deduct(total); // i make error with Exception so its okey to minus from  p.quantity before check if transfer is successfully done
-
+        try {
+            customer.deduct(total);
+        }catch (Exception e)
+        {
+            for (CartItem item : cart.getItems()) {
+                item.product.quantity+=item.buied_quantity;
+            }
+            System.out.println(e.getMessage());
+            return ;
+        }
         if (!itemsToShip.isEmpty()) {
             ShippingService.Shipment_notice(itemsToShip);
         }
